@@ -71,3 +71,15 @@ def render(report):
     return '\n'.join(pieces) + '</html>\n'
 
 
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    for name in ("claims", "corpus", "predictions", "output"):
+        parser.add_argument("--" + name, required=True, type=Path)
+    args = parser.parse_args()
+    report = build_report(load_index(args.claims, "id"), load_index(args.corpus, "doc_id"),
+                          load_index(args.predictions, "id"))
+    args.output.write_text(render(report))
+
+
+if __name__ == "__main__":
+    main()
